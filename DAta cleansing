@@ -1,0 +1,492 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Recommendaersystem.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyOGoSR6IPZQEJ8pP8hGFJxI",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/SAR-bang/RecommenderSystem/blob/main/DAta%20cleansing\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "dXyAK37sKQaL"
+      },
+      "source": [
+        "#/*\r\n",
+        "# loading the data from\r\n",
+        "\r\n",
+        "#####"
+      ],
+      "execution_count": 1,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "PUhJ-SDCaurb"
+      },
+      "source": [
+        "import pandas as pd\r\n",
+        "import numpy as np\r\n"
+      ],
+      "execution_count": 3,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "IppRqk26azhs"
+      },
+      "source": [
+        "from google.colab import files\r\n",
+        "data_to_load = files.upload()"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 204
+        },
+        "id": "N9l7LuW_a7cv",
+        "outputId": "9916fd61-c761-4f1c-f982-e258858724b8"
+      },
+      "source": [
+        "df = pd.read_csv(\"post_data.csv\")\r\n",
+        "df.head()\r\n",
+        "\r\n",
+        "\r\n"
+      ],
+      "execution_count": 52,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>user_id</th>\n",
+              "      <th>post_id</th>\n",
+              "      <th>time_stamp</th>\n",
+              "      <th>Valuable</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>5eece14ffc13ae660900008b</td>\n",
+              "      <td>136781766.0</td>\n",
+              "      <td>01-01-2019 13:30</td>\n",
+              "      <td>1.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>5eece14efc13ae660900003c</td>\n",
+              "      <td>43094523.0</td>\n",
+              "      <td>01-01-2019 13:33</td>\n",
+              "      <td>2.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>5eece14efc13ae6609000025</td>\n",
+              "      <td>42428071.0</td>\n",
+              "      <td>01-01-2019 13:43</td>\n",
+              "      <td>2.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>5eece14ffc13ae66090001d4</td>\n",
+              "      <td>76472880.0</td>\n",
+              "      <td>01-01-2019 13:54</td>\n",
+              "      <td>2.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>5eece14ffc13ae66090000ac</td>\n",
+              "      <td>202721843.0</td>\n",
+              "      <td>01-01-2019 14:00</td>\n",
+              "      <td>3.0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "                    user_id      post_id        time_stamp  Valuable \n",
+              "0  5eece14ffc13ae660900008b  136781766.0  01-01-2019 13:30        1.0\n",
+              "1  5eece14efc13ae660900003c   43094523.0  01-01-2019 13:33        2.0\n",
+              "2  5eece14efc13ae6609000025   42428071.0  01-01-2019 13:43        2.0\n",
+              "3  5eece14ffc13ae66090001d4   76472880.0  01-01-2019 13:54        2.0\n",
+              "4  5eece14ffc13ae66090000ac  202721843.0  01-01-2019 14:00        3.0"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 52
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 235
+        },
+        "id": "kJjEirqBeByZ",
+        "outputId": "58b37028-7855-4df3-829d-40ef184765ea"
+      },
+      "source": [
+        "feed = df.groupby('Valuable ')\r\n",
+        "feed.groups\r\n",
+        "feed.count()"
+      ],
+      "execution_count": 53,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>user_id</th>\n",
+              "      <th>post_id</th>\n",
+              "      <th>time_stamp</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>Valuable</th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>1.0</th>\n",
+              "      <td>4353</td>\n",
+              "      <td>4353</td>\n",
+              "      <td>4353</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2.0</th>\n",
+              "      <td>4300</td>\n",
+              "      <td>4300</td>\n",
+              "      <td>4300</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3.0</th>\n",
+              "      <td>4421</td>\n",
+              "      <td>4421</td>\n",
+              "      <td>4421</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4.0</th>\n",
+              "      <td>4374</td>\n",
+              "      <td>4374</td>\n",
+              "      <td>4374</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>5.0</th>\n",
+              "      <td>4308</td>\n",
+              "      <td>4308</td>\n",
+              "      <td>4308</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "           user_id  post_id  time_stamp\n",
+              "Valuable                               \n",
+              "1.0           4353     4353        4353\n",
+              "2.0           4300     4300        4300\n",
+              "3.0           4421     4421        4421\n",
+              "4.0           4374     4374        4374\n",
+              "5.0           4308     4308        4308"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 53
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 235
+        },
+        "id": "YUchk0QBiUSy",
+        "outputId": "c33ec8c0-2738-4b1e-999e-cd639827afd1"
+      },
+      "source": [
+        "feed.nunique()"
+      ],
+      "execution_count": 54,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>user_id</th>\n",
+              "      <th>post_id</th>\n",
+              "      <th>time_stamp</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>Valuable</th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>1.0</th>\n",
+              "      <td>464</td>\n",
+              "      <td>3086</td>\n",
+              "      <td>4314</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2.0</th>\n",
+              "      <td>455</td>\n",
+              "      <td>3093</td>\n",
+              "      <td>4268</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3.0</th>\n",
+              "      <td>470</td>\n",
+              "      <td>3161</td>\n",
+              "      <td>4381</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4.0</th>\n",
+              "      <td>463</td>\n",
+              "      <td>3105</td>\n",
+              "      <td>4331</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>5.0</th>\n",
+              "      <td>465</td>\n",
+              "      <td>3062</td>\n",
+              "      <td>4267</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "           user_id  post_id  time_stamp\n",
+              "Valuable                               \n",
+              "1.0            464     3086        4314\n",
+              "2.0            455     3093        4268\n",
+              "3.0            470     3161        4381\n",
+              "4.0            463     3105        4331\n",
+              "5.0            465     3062        4267"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 54
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jDcXlmcaifuh",
+        "outputId": "3f80574e-f5df-4fd3-91d2-832c5d8dffcb"
+      },
+      "source": [
+        "df.isnull().sum() # finds null value in each column"
+      ],
+      "execution_count": 55,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "user_id       0\n",
+              "post_id       1\n",
+              "time_stamp    1\n",
+              "Valuable      1\n",
+              "dtype: int64"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 55
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "NL8kSAaolDfg"
+      },
+      "source": [
+        "df.dropna(inplace=True)"
+      ],
+      "execution_count": 56,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "uaitjEpOlIYY",
+        "outputId": "7ac36257-90d9-4b24-a694-11ce390ed93b"
+      },
+      "source": [
+        "df.isnull().sum()"
+      ],
+      "execution_count": 58,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "user_id       0\n",
+              "post_id       0\n",
+              "time_stamp    0\n",
+              "Valuable      0\n",
+              "dtype: int64"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 58
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "QToWV2zrle6X"
+      },
+      "source": [
+        "# mapping the values to 0 and 1 assuming values between1,2 and 3,4,5\r\n",
+        "\r\n",
+        "df['Valuable ']= df['Valuable '].map({1:0,2:0,3:1,4:1,5:1})"
+      ],
+      "execution_count": 64,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "L3NCnizFnZ38",
+        "outputId": "65277ee6-2c49-45f4-8521-c085470acdfb"
+      },
+      "source": [
+        "df['Valuable '].head()"
+      ],
+      "execution_count": 67,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "0    0\n",
+              "1    0\n",
+              "2    0\n",
+              "3    0\n",
+              "4    1\n",
+              "Name: Valuable , dtype: int64"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 67
+        }
+      ]
+    }
+  ]
+}
